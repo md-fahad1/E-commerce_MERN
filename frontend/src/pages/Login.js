@@ -20,11 +20,6 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (data.email === "fahad@gmail.com" && data.password === "111") {
-      toast.success("Admin login successful");
-      navigate("/admin-panel"); // redirect to your admin dashboard
-      return;
-    }
     try {
       const response = await fetch(SummaryApi.singIn.url, {
         method: SummaryApi.singIn.method,
