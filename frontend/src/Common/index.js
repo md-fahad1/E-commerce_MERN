@@ -1,6 +1,6 @@
 const backendDomain =
   process.env.NODE_ENV === "production"
-    ? "https://e-commerce-mern-chi-seven.vercel.app/"
+    ? "https://e-commerce-mern-chi-seven.vercel.app"
     : "http://localhost:8000";
 
 const SummaryApi = {
