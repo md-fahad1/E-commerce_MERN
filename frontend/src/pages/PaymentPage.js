@@ -212,19 +212,21 @@ const PaymentPage = () => {
                       </p>
                       <div className="flex items-center gap-2 mt-1">
                         <button
-                          className="border px-2 rounded"
+                          type="button"
                           onClick={() =>
                             decreaseQty(product._id, product.quantity)
                           }
+                          className="border px-2 rounded"
                         >
                           -
                         </button>
                         <span>{product.quantity}</span>
                         <button
-                          className="border px-2 rounded"
+                          type="button"
                           onClick={() =>
                             increaseQty(product._id, product.quantity)
                           }
+                          className="border px-2 rounded"
                         >
                           +
                         </button>
@@ -238,6 +240,7 @@ const PaymentPage = () => {
                       )}
                     </p>
                     <button
+                      type="button"
                       onClick={() => deleteCartProduct(product._id)}
                       className="text-red-600 hover:text-red-800 text-sm flex items-center mt-1"
                     >

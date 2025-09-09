@@ -122,7 +122,7 @@ const Header = () => {
               className="relative text-white text-2xl hover:text-green-400 transition"
             >
               <TiShoppingCart />
-              <span className="absolute -top-2 -right-3 bg-red-600 w-5 h-5 rounded-full flex items-center justify-center text-xs">
+              <span className="absolute -top-2 -right-3 bg-green-600 w-5 h-5 rounded-full flex items-center justify-center text-xs">
                 {context?.cartProductCount || 0}
               </span>
             </Link>
