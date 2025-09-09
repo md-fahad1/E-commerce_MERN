@@ -1,189 +1,232 @@
 import React, { useContext, useState } from "react";
-import Logo from "./Logo";
-import { GrSearch } from "react-icons/gr";
-import { FaRegCircleUser } from "react-icons/fa6";
-import { FaShoppingCart } from "react-icons/fa";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { AiOutlineLaptop } from "react-icons/ai";
-import { toast } from "react-toastify";
-import { setUserDetails } from "../store/userSlice";
-import ROLE from "../Common/role";
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { FaUserCircle, FaMobileAlt, FaTv } from "react-icons/fa";
+import { IoIosLogOut } from "react-icons/io";
+import { TiShoppingCart, TiHeart } from "react-icons/ti";
+import { CiGift } from "react-icons/ci";
 import Context from "../context";
 import SummaryApi from "../Common";
-import { FaUser } from "react-icons/fa";
-import { FaMobileScreen } from "react-icons/fa6";
+import ROLE from "../Common/role";
+import { setUserDetails } from "../store/userSlice";
 
 const Header = () => {
   const user = useSelector((state) => state?.user?.user);
   const dispatch = useDispatch();
-  const [menuDisplay, setMenuDisplay] = useState(false);
   const context = useContext(Context);
   const navigate = useNavigate();
-  const searchInput = useLocation();
-  const URLSearch = new URLSearchParams(searchInput?.search);
-  const searchQuery = URLSearch.getAll("q");
-  const [search, setSearch] = useState(searchQuery);
+  const [search, setSearch] = useState("");
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const handleLogout = async () => {
     const fetchData = await fetch(SummaryApi.logout_user.url, {
       method: SummaryApi.logout_user.method,
       credentials: "include",
     });
-
     const data = await fetchData.json();
-
     if (data.success) {
-      toast.success(data.message);
       dispatch(setUserDetails(null));
       navigate("/");
     }
-
-    if (data.error) {
-      toast.error(data.message);
-    }
   };
 
-  console.log("user", user);
   const handleSearch = (e) => {
     const { value } = e.target;
     setSearch(value);
-
-    if (value) {
-      navigate(`/search?q=${value}`);
-    } else {
-      navigate("/search");
-    }
+    if (value) navigate(`/search?q=${value}`);
+    else navigate("/search");
   };
 
   const handleCategoryClick = (category) => {
-    window.location.href = `/product-category?category=${category}`;
+    navigate(`/product-category?category=${category}`);
   };
 
-  return (
-    <header className="h-16 shadow-md bg-[#192a56] fixed w-full z-40">
-      <div className=" h-full container mx-auto flex items-center px-4 justify-between">
-        <div className="text-bold font-mono text-2xl text-white">
-          <a href={"/"}>Gadget 360°</a>
-        </div>
+  const handleOfferClick = () => navigate("/offers");
+  const handleWishlistClick = () => navigate("/wishlist");
 
-        <div className="hidden lg:flex items-center w-full justify-between max-w-sm border  focus-within:shadow bg-white ">
+  return (
+    <header className="bg-[#192a56] text-white fixed w-full z-50 shadow-md">
+      <div className="container mx-auto flex items-center justify-between h-16 px-4">
+        {/* Logo */}
+        <Link
+          to="/"
+          className="text-2xl font-bold font-serif hover:text-green-400 transition"
+        >
+          Gadget 360°
+        </Link>
+
+        {/* Search Bar */}
+        <div className="hidden lg:flex items-center bg-white rounded-md overflow-hidden shadow-sm w-full max-w-md mx-4">
           <input
             type="text"
-            placeholder="search product here..."
-            className="w-full outline-none"
-            onChange={handleSearch}
             value={search}
+            onChange={handleSearch}
+            placeholder="Search products..."
+            className="flex-1 px-4 py-2 outline-none text-gray-800"
           />
-          <div className="text-lg min-w-[50px] h-8 bg-gray-300 flex items-center justify-center rounded-l-md text-gray-800">
-            <GrSearch />
+          <div className="bg-gray-300 p-2 flex items-center justify-center text-white">
+            🔍
           </div>
         </div>
-        <div className=" text-white font-semibold flex items-center gap-2 cursor-pointer">
+
+        {/* Categories & Sections */}
+        <div className="hidden lg:flex gap-8 items-center">
           <div
             onClick={() => handleCategoryClick("televisions")}
-            className="flex items-center gap-2"
+            className="flex flex-col items-center cursor-pointer hover:text-green-400 transition"
           >
-            <AiOutlineLaptop className="text-3xl text-[#00b894]" />
-            <div>
-              <p> Televisions</p>
-              <p className="text-xs">Deals</p>
-            </div>
+            <FaTv className="text-3xl" />
+            <span className="text-xs mt-1">TVs</span>
           </div>
-        </div>
-
-        <div className=" text-white font-semibold flex items-center gap-2 cursor-pointer">
           <div
             onClick={() => handleCategoryClick("mobiles")}
-            className="flex items-center gap-2"
+            className="flex flex-col items-center cursor-pointer hover:text-green-400 transition"
           >
-            <FaMobileScreen className="text-3xl text-[#00b894]" />
-            <div>
-              <p> Mobile</p>
-              <p className="text-xs">Deals</p>
-            </div>
+            <FaMobileAlt className="text-3xl" />
+            <span className="text-xs mt-1">Mobiles</span>
           </div>
+          <div
+            onClick={handleOfferClick}
+            className="flex flex-col items-center cursor-pointer hover:text-green-400 transition"
+          >
+            <span className="text-3xl font-bold">
+              <CiGift />
+            </span>
+            <span className="text-xs mt-1">Offers</span>
+          </div>
+          <div
+            onClick={handleWishlistClick}
+            className="flex flex-col items-center cursor-pointer hover:text-green-400 transition"
+          >
+            <TiHeart className="text-3xl" />
+            <span className="text-xs mt-1">Wishlist</span>
+          </div>
+          {/* Admin Panel */}
+          {user?.role === ROLE.ADMIN && (
+            <Link
+              to="/admin-panel/products"
+              className="flex flex-col items-center cursor-pointer hover:text-green-400 transition"
+            >
+              <span className="text-3xl font-bold">⚙️</span>
+              <span className="text-xs mt-1">Admin</span>
+            </Link>
+          )}
         </div>
 
-        <div className="flex items-center gap-7">
-          <div className="relative flex justify-center">
-            {user?._id && (
-              <div
-                className="text-3xl cursor-pointer relative flex justify-center"
-                onClick={() => setMenuDisplay((preve) => !preve)}
-              >
-                {user?.profilePic ? (
-                  <img
-                    src={user?.profilePic}
-                    className="w-10 h-10 rounded-full"
-                    alt={user?.name}
-                  />
-                ) : (
-                  <FaRegCircleUser className="text-[#00b894]" />
-                )}
-              </div>
-            )}
-
-            {menuDisplay && (
-              <div className="absolute bg-white bottom-0 top-11 h-fit p-2 shadow-lg rounded">
-                <nav>
-                  {user?.role === ROLE.ADMIN && (
-                    <a
-                      href="/admin-panel/products"
-                      className="whitespace-nowrap hidden md:block hover:bg-slate-100 p-2"
-                      onClick={() => setMenuDisplay((preve) => !preve)}
-                    >
-                      Admin Panel
-                    </a>
-                  )}
-                </nav>
-              </div>
-            )}
-          </div>
-
+        {/* Cart, Profile, Logout */}
+        <div className="flex items-center gap-6">
+          {/* Cart */}
           {user?._id && (
-            <a href="/cart" className="text-2xl relative text-white">
-              <span>
-                <FaShoppingCart />
+            <Link
+              to="/cart"
+              className="relative text-white text-2xl hover:text-green-400 transition"
+            >
+              <TiShoppingCart />
+              <span className="absolute -top-2 -right-3 bg-red-600 w-5 h-5 rounded-full flex items-center justify-center text-xs">
+                {context?.cartProductCount || 0}
               </span>
-
-              <div className="bg-red-600 text-white w-5 h-5 rounded-full p-1 flex items-center justify-center absolute -top-2 -right-3">
-                <p className="text-sm">{context?.cartProductCount}</p>
-              </div>
-            </a>
+            </Link>
           )}
 
-          <div>
-            {user?._id ? (
-              <button
-                onClick={handleLogout}
-                className="px-3 py-1 rounded-full text-white bg-red-600 hover:bg-red-700"
-              >
-                Logout
-              </button>
-            ) : (
-              <Link
-                to={"/login"}
-                className="px-3 py-1 rounded-full text-white "
-              >
-                <div className="flex flex-col items-center gap-2 lg:flex-row">
-                  <div>
-                    <FaUser className="w-5 h-5 text-[#00b894] " />
-                  </div>
-                  <div className="text-white">
-                    <p className="font-semibold text-2xs md:text-sm">Account</p>
-                    <div className="text-xs mt-[-1px] hidden lg:block ">
-                      <Link href="/auth/login"> Register</Link> or
-                      <Link href=""> Login</Link>
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            )}
-          </div>
+          {/* Profile */}
+          {!user?._id ? (
+            <Link
+              to="/login"
+              className="flex items-center gap-2 text-white bg-[#1abc9c] px-3 py-1 rounded-full hover:bg-green-500 transition"
+            >
+              <FaUserCircle size={22} />
+              <span className="text-sm font-semibold">Account</span>
+            </Link>
+          ) : (
+            <div className="flex items-center gap-2">
+              {user?.profilePic ? (
+                <img
+                  src={user.profilePic}
+                  alt={user.name}
+                  className="w-10 h-10 rounded-full"
+                />
+              ) : (
+                <FaUserCircle size={28} className="text-white" />
+              )}
+            </div>
+          )}
+
+          {/* Logout */}
+          {user?._id && (
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-1 px-3 py-1 rounded-full bg-red-600 hover:bg-red-700 transition text-white text-sm"
+            >
+              <IoIosLogOut size={20} />
+              Logout
+            </button>
+          )}
+
+          {/* Mobile Hamburger */}
+          <button
+            className="lg:hidden flex items-center text-white text-2xl"
+            onClick={() => setMenuOpen((prev) => !prev)}
+          >
+            ☰
+          </button>
         </div>
       </div>
+
+      {/* Mobile Menu */}
+      {menuOpen && (
+        <div className="lg:hidden bg-[#192a56] text-white px-4 py-4 space-y-4">
+          <div
+            onClick={() => handleCategoryClick("televisions")}
+            className="flex items-center gap-2 hover:text-green-400 transition cursor-pointer"
+          >
+            <FaTv size={22} /> TVs
+          </div>
+          <div
+            onClick={() => handleCategoryClick("mobiles")}
+            className="flex items-center gap-2 hover:text-green-400 transition cursor-pointer"
+          >
+            <FaMobileAlt size={22} /> Mobiles
+          </div>
+          <div
+            onClick={handleOfferClick}
+            className="flex items-center gap-2 hover:text-green-400 transition cursor-pointer"
+          >
+            🔥 Offers
+          </div>
+          <div
+            onClick={handleWishlistClick}
+            className="flex items-center gap-2 hover:text-green-400 transition cursor-pointer"
+          >
+            <TiHeart size={22} /> Wishlist
+          </div>
+          {user?._id && (
+            <div
+              onClick={handleLogout}
+              className="flex items-center gap-2 text-red-600 hover:text-red-400 cursor-pointer"
+            >
+              <IoIosLogOut size={22} /> Logout
+            </div>
+          )}
+          {!user?._id && (
+            <Link
+              to="/login"
+              className="flex items-center gap-2 text-white bg-green-400 px-3 py-1 rounded-full hover:bg-green-500 transition"
+            >
+              <FaUserCircle size={20} /> Login / Register
+            </Link>
+          )}
+          {user?.role === ROLE.ADMIN && (
+            <Link
+              to="/admin-panel/products"
+              className="flex items-center gap-2 hover:text-green-400 transition"
+            >
+              ⚙️ Admin Panel
+            </Link>
+          )}
+        </div>
+      )}
     </header>
   );
 };
+
 export default Header;
