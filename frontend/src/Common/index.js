@@ -1,6 +1,6 @@
 const backendDomain =
   process.env.NODE_ENV === "production"
-    ? "https://ecommerce-mern-backend-99as.onrender.com"
+    ? "https://e-commerce-mern-chi-seven.vercel.app/"
     : "http://localhost:8000";
 
 const SummaryApi = {
