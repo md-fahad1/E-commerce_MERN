@@ -16,6 +16,10 @@ import Cancel from "../pages/Cancel";
 import OrderPage from "../pages/OrderPage";
 import PaymentPage from "../pages/PaymentPage";
 import OAuth from "../pages/OAuth";
+import Offers from "../pages/Offer";
+import Wishlist from "../pages/Wishlist";
+import UserPanel from "../pages/UserPanel";
+import UserOrder from "../pages/UserOrder";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -70,6 +74,14 @@ const router = createBrowserRouter([
         element: <SearchProduct />,
       },
       {
+        path: "offers",
+        element: <Offers />,
+      },
+      {
+        path: "wishlist",
+        element: <Wishlist />,
+      },
+      {
         path: "google",
         element: <OAuth />,
       },
@@ -85,6 +97,17 @@ const router = createBrowserRouter([
             path: "products",
             element: <Products />,
           },
+        ],
+      },
+      {
+        path: "user-panel",
+        element: <UserPanel />,
+        children: [
+          {
+            path: "order",
+            element: <UserOrder />,
+          },
+         
         ],
       },
     ],

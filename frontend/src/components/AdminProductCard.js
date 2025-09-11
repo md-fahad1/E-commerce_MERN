@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { MdModeEditOutline } from "react-icons/md";
+import { CiEdit } from "react-icons/ci";
 import AdminEditProduct from "./AdminEditProduct";
 import displayCurrency from "../helpers/displayCurrency";
 // import displayINRCurrency from "../helpers/displayCurrency";
@@ -27,10 +27,10 @@ const AdminProductCard = ({ data, fetchData }) => {
           </p>
 
           <div
-            className="w-fit ml-auto p-2 bg-green-100 hover:bg-green-600 rounded-full hover:text-white cursor-pointer"
+            className="w-fit ml-auto p-2 bg-blue-100 hover:bg-[#192A56] rounded-full hover:text-white cursor-pointer"
             onClick={() => setEditProduct(true)}
           >
-            <MdModeEditOutline />
+            <CiEdit />
           </div>
         </div>
       </div>

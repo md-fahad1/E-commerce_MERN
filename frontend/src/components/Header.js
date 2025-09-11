@@ -139,6 +139,10 @@ const Header = () => {
             </Link>
           ) : (
             <div className="flex items-center gap-2">
+
+              <Link
+              to="/admin-panel/products"
+            >
               {user?.profilePic ? (
                 <img
                   src={user.profilePic}
@@ -148,9 +152,9 @@ const Header = () => {
               ) : (
                 <FaUserCircle size={28} className="text-white" />
               )}
+            </Link> 
             </div>
           )}
-
           {/* Logout */}
           {user?._id && (
             <button

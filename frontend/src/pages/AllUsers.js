@@ -3,6 +3,7 @@ import SummaryApi from "../Common";
 import { toast } from "react-toastify";
 import moment from "moment";
 import { MdModeEdit } from "react-icons/md";
+import { CiEdit } from "react-icons/ci";
 import ChangeUserRole from "../components/ChangeUserRole";
 
 const AllUsers = () => {
@@ -22,9 +23,8 @@ const AllUsers = () => {
         credentials: "include",
       });
       const responseData = await fetchData.json();
-      console.log("responseData", responseData.data);
       if (responseData.success) {
-        setAllUsers(responseData.data); // Directly assign the array of users
+        setAllUsers(responseData.data);
       } else {
         toast.error(responseData.message);
       }
@@ -36,45 +36,68 @@ const AllUsers = () => {
 
   useEffect(() => {
     fetchAllUsers();
-  }, []); // Empty dependency array to run only once on component mount
+  }, []);
 
   return (
-    <div>
-      <h1>All Users</h1>
-      <table className="w-full userTable">
-        <thead>
-          <tr className="bg-black text-white">
-            <th>SN</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Role</th>
-            <th>Created Date</th>
-            <th>Application</th>
-          </tr>
-        </thead>
-        <tbody>
-          {allUsers.map((user, index) => (
-            <tr key={index}>
-              <td>{index + 1}</td>
-              <td>{user.name}</td>
-              <td>{user.email}</td>
-              <td>{user.role}</td>
-              <td>{moment(user.createdAt).format("lll")}</td>
-              <td>
-                <button
-                  className="bg-green-300 p-2 rounded-md hover:bg-green-600 hover:text-white"
-                  onClick={() => {
-                    setUpdateUserDetails(user);
-                    setOpenUpdateRole(true);
-                  }}
-                >
-                  <MdModeEdit />
-                </button>
-              </td>
+    <div className="p-1 bg-gray-100 min-h-screen">
+      <h1 className="text-xl font-bold text-gray-800 mb-1">All Users</h1>
+
+      <div className="overflow-x-auto shadow-lg rounded-md bg-white">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-[#16a085] text-white">
+            <tr>
+              <th className="px-6 py-1 text-left text-sm font-semibold uppercase">SN</th>
+              <th className="px-6 py-1 text-left text-sm font-semibold uppercase">Name</th>
+              <th className="px-6 py-1 text-left text-sm font-semibold uppercase">Email</th>
+              <th className="px-6 py-1 text-left text-sm font-semibold uppercase">Role</th>
+              <th className="px-6 py-1 text-left text-sm font-semibold uppercase">Created Date</th>
+              <th className="px-6 py-1 text-left text-sm font-semibold uppercase">Action</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {allUsers.map((user, index) => (
+              <tr
+                key={index}
+                className={`${
+                  index % 2 === 0 ? "bg-gray-50" : "bg-white"
+                } hover:bg-green-50 transition duration-150`}
+              >
+                <td className="px-6 py-4 text-sm text-gray-700">{index + 1}</td>
+                <td className="px-6 py-4 text-sm text-gray-800 font-medium">{user.name}</td>
+                <td className="px-6 py-4 text-sm text-gray-600">{user.email}</td>
+                <td className="px-6 py-4 text-sm">
+                  <span
+                    className={`px-2 py-1 rounded-full text-white text-xs font-semibold ${
+                      user.role === "ADMIN"
+                        ? "bg-purple-500"
+                        : user.role === "USER"
+                        ? "bg-blue-500"
+                        : "bg-gray-400"
+                    }`}
+                  >
+                    {user.role}
+                  </span>
+                </td>
+                <td className="px-6 py-4 text-sm text-gray-500">
+                  {moment(user.createdAt).format("lll")}
+                </td>
+                <td className="px-6 py-4 text-sm">
+                  <button
+                    className="bg-green-100 p-2 rounded-md hover:bg-[#192A56] hover:text-white transition duration-200"
+                    onClick={() => {
+                      setUpdateUserDetails(user);
+                      setOpenUpdateRole(true);
+                    }}
+                  >
+                    <CiEdit size={20} />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
       {openUpdateRole && (
         <ChangeUserRole
           onClose={() => setOpenUpdateRole(false)}
