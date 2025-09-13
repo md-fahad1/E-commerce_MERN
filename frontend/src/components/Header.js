@@ -17,7 +17,6 @@ const Header = () => {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
-
   const handleLogout = async () => {
     const fetchData = await fetch(SummaryApi.logout_user.url, {
       method: SummaryApi.logout_user.method,
@@ -139,22 +138,22 @@ const Header = () => {
             </Link>
           ) : (
             <div className="flex items-center gap-2">
-
               <Link
-              to="/admin-panel/products"
-            >
-              {user?.profilePic ? (
-                <img
-                  src={user.profilePic}
-                  alt={user.name}
-                  className="w-10 h-10 rounded-full"
-                />
-              ) : (
-                <FaUserCircle size={28} className="text-white" />
-              )}
-            </Link> 
+                to={user?.role === "ADMIN" ? "/admin-panel" : "/user-panel"}
+              >
+                {user?.profilePic ? (
+                  <img
+                    src={user.profilePic}
+                    alt={user.name}
+                    className="w-10 h-10 rounded-full"
+                  />
+                ) : (
+                  <FaUserCircle size={28} className="text-white" />
+                )}
+              </Link>
             </div>
           )}
+
           {/* Logout */}
           {user?._id && (
             <button

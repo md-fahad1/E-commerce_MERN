@@ -73,7 +73,7 @@ function App() {
         {!isAdminRoute && !isUserRoute && <Header />}
        <main
   className={`min-h-[calc(100vh-120px)] ${
-    isAdminRoute ? "pt-0" : isUserRoute ? "pt-16" : "pt-16"
+    isAdminRoute ? "pt-0" : isUserRoute ? "pt-0" : "pt-16"
   }`}
 >
   <Outlet />

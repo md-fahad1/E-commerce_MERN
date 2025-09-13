@@ -13,7 +13,7 @@ const UserPanel = () => {
   const user = useSelector((state) => state?.user?.user);
 
   useEffect(() => {
-    if (user && user.role !== ROLE.ADMIN) {
+    if (user && user.role !== ROLE.GENERAL) {
       navigate("/");
     }
   }, [user, navigate]);

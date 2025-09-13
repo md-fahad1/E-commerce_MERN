@@ -1,5 +1,6 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import {
   FaUserCircle,
   FaUsers,
@@ -11,12 +12,26 @@ import {
   FaEnvelope,
   FaCalendarAlt,
 } from "react-icons/fa";
+import SummaryApi from "../Common";
 import { Link, useLocation } from "react-router-dom";
+import { setUserDetails } from "../store/userSlice";
 
 const Sidebar = () => {
   const user = useSelector((state) => state?.user?.user);
   const location = useLocation();
-
+ const dispatch = useDispatch();
+   const navigate = useNavigate();
+  const handleLogout = async () => {
+    const fetchData = await fetch(SummaryApi.logout_user.url, {
+      method: SummaryApi.logout_user.method,
+      credentials: "include",
+    });
+    const data = await fetchData.json();
+    if (data.success) {
+      dispatch(setUserDetails(null));
+      navigate("/");
+    }
+  };
   // Admin Navigation Paths
   const navItems = [
     { name: "Dashboard", path: "/admin-panel", icon: <FaChartLine /> },
@@ -26,7 +41,7 @@ const Sidebar = () => {
     { name: "Messages", path: "/admin-panel/messages", icon: <FaEnvelope /> },
     { name: "Calendar", path: "/admin-panel/calendar", icon: <FaCalendarAlt /> },
     { name: "Reports", path: "/admin-panel/reports", icon: <FaChartLine /> },
-    { name: "Settings", path: "/admin-panel/settings", icon: <FaCog /> },
+    { name: "Profile", path: "/admin-panel/profile", icon: <FaUserCircle /> },
   ];
 
   // Color mapping for active item
@@ -84,12 +99,12 @@ const Sidebar = () => {
         >
           <FaCog /> <span>Settings</span>
         </Link>
-        <Link
-          to="/logout"
+        <button
+           onClick={handleLogout}
           className="flex items-center gap-3 px-4 py-2 rounded-lg text-red-500 hover:bg-red-50 hover:text-red-600 mt-2 transition-all duration-200"
         >
           <FaSignOutAlt /> <span>Logout</span>
-        </Link>
+        </button>
       </div>
     </aside>
   );

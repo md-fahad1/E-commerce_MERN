@@ -20,6 +20,9 @@ import Offers from "../pages/Offer";
 import Wishlist from "../pages/Wishlist";
 import UserPanel from "../pages/UserPanel";
 import UserOrder from "../pages/UserOrder";
+import UserWishList from "../pages/UserWishList";
+import UserProfile from "../pages/UserProfile";
+import AdminProfile from "../pages/AdminProfile";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -97,6 +100,10 @@ const router = createBrowserRouter([
             path: "products",
             element: <Products />,
           },
+          {
+            path: "profile",
+            element: <AdminProfile />,
+          },
         ],
       },
       {
@@ -104,8 +111,16 @@ const router = createBrowserRouter([
         element: <UserPanel />,
         children: [
           {
-            path: "order",
+            path: "orders",
             element: <UserOrder />,
+          },
+           {
+            path: "wishlist",
+            element: <UserWishList />,
+          },
+          {
+            path: "profile",
+            element: <UserProfile />,
           },
          
         ],
