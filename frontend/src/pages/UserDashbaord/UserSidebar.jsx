@@ -9,9 +9,9 @@ import {
   FaSignOutAlt,
   FaChartLine,
 } from "react-icons/fa";
-import SummaryApi from "../Common";
-import Empty from "../assest/empty.jpg"
-import { setUserDetails } from "../store/userSlice";
+import SummaryApi from "../../Common";
+import Empty from "../../assest/empty.jpg"
+import { setUserDetails } from "../../store/userSlice";
 
 const UserSidebar = () => {
   const user = useSelector((state) => state?.user?.user);

@@ -3,8 +3,8 @@ import loginIcons from "../assest/signin.gif";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import ImageToBase64 from "../helpers/imageToBase64";
-import SummaryApi from "../Common";
+import ImageToBase64 from "../../helpers/imageToBase64";
+import SummaryApi from "../../Common";
 import { toast } from "react-toastify";
 
 const SignUp = () => {

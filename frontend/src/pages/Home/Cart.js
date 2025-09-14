@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 
-import Context from "../context";
-import displayINRCurrency from "../helpers/displayCurrency";
+import Context from "../../context";
+import displayINRCurrency from "../../helpers/displayCurrency";
 import { MdDelete } from "react-icons/md";
-import SummaryApi from "../Common";
+import SummaryApi from "../../Common";
 import { useNavigate } from "react-router-dom";
 // import { loadStripe } from "@stripe/stripe-js";
 

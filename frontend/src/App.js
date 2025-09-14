@@ -1,7 +1,7 @@
 import { Outlet, useLocation } from "react-router-dom";
 import "./App.css";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
+
+
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect, useState } from "react";
@@ -9,6 +9,8 @@ import SummaryApi from "./Common";
 import Context from "./context";
 import { useDispatch } from "react-redux";
 import { setUserDetails } from "./store/userSlice";
+import Header from "./components/LandingPage/Header";
+import Footer from "./components/LandingPage/Footer";
 
 function App() {
   const dispatch = useDispatch();

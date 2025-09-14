@@ -1,11 +1,11 @@
 import React, { useContext, useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import SummaryApi from "../Common";
+import SummaryApi from "../../Common";
 import { toast } from "react-toastify";
-import Context from "../context";
+import Context from "../../context";
 import OAuth from "./OAuth";
-import loginIcons from "../assest/login1.png"; // your illustration
+import loginIcons from "../../assest/login1.png"; // your illustration
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);

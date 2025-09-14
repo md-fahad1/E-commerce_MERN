@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Context from "../context";
-import SummaryApi from "../Common";
-import displayINRCurrency from "../helpers/displayCurrency";
+import Context from "../../context";
+import SummaryApi from "../../Common";
+import displayINRCurrency from "../../helpers/displayCurrency";
 import { MdDelete } from "react-icons/md";
 
 const PaymentPage = () => {

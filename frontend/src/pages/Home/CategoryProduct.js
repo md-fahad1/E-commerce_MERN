@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
-import productCategory from '../helpers/productCategory'
+import productCategory from '../../helpers/productCategory'
+import SummaryApi from '../../Common'
+import VerticalCard from '../../components/LandingPage/VarticalCard'
 
-import VerticalCard from '../components/VarticalCard'
-import SummaryApi from '../Common'
+
 
 
 const CategoryProduct = () => {

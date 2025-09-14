@@ -12,9 +12,9 @@ import {
   FaEnvelope,
   FaCalendarAlt,
 } from "react-icons/fa";
-import SummaryApi from "../Common";
+import SummaryApi from "../../Common";
 import { Link, useLocation } from "react-router-dom";
-import { setUserDetails } from "../store/userSlice";
+import { setUserDetails } from "../../store/userSlice";
 
 const Sidebar = () => {
   const user = useSelector((state) => state?.user?.user);

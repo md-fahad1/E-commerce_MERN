@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { Link } from "react-router-dom";
-import SummaryApi from "../Common";
+import SummaryApi from "../../Common";
 
 const CategoryList = () => {
   const [categoryProduct, setCategoryProduct] = useState([]);

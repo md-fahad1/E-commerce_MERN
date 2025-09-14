@@ -1,10 +1,10 @@
 import React from 'react';
 import Slider from 'react-slick';
-import Banner1 from '../assest/banner/banner1.jpg';
-import Banner2 from '../assest/banner/Banner2.jpg';
-import Banner3 from '../assest/banner/Banner3.jpg';
-import Banner4 from '../assest/banner/Banner4.jpg';
-import Banner5 from '../assest/banner/Banner5.jpg';
+import Banner1 from '../../assest/banner/banner1.jpg';
+import Banner2 from '../../assest/banner/Banner2.jpg';
+import Banner3 from '../../assest/banner/Banner3.jpg';
+import Banner4 from '../../assest/banner/Banner4.jpg';
+import Banner5 from '../../assest/banner/Banner5.jpg';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 

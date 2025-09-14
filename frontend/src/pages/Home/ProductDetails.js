@@ -3,12 +3,13 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { FaStar } from "react-icons/fa";
 import { FaStarHalf } from "react-icons/fa";
-import displayINRCurrency from "../helpers/displayCurrency";
+import displayINRCurrency from "../../helpers/displayCurrency";
 
-import CategroyWiseProductDisplay from "../components/CategoryWiseProductDisplay";
-import addToCart from "../helpers/addToCart";
-import Context from "../context";
-import SummaryApi from "../Common";
+
+import addToCart from "../../helpers/addToCart";
+import Context from "../../context";
+import SummaryApi from "../../Common";
+import CategroyWiseProductDisplay from "../../components/LandingPage/CategoryWiseProductDisplay";
 
 const ProductDetails = () => {
   const [data, setData] = useState({

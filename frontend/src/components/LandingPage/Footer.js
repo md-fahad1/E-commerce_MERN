@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Logo from '../assest/banner/Banner5.jpg';
+import Logo from '../../assest/banner/Banner5.jpg';
 import { FaFacebook, FaInstagram, FaLinkedin, FaTwitter, FaYoutube, FaPhone } from 'react-icons/fa';
 
 const Footer = () => {

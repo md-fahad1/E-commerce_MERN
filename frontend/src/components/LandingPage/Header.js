@@ -5,10 +5,10 @@ import { FaUserCircle, FaMobileAlt, FaTv } from "react-icons/fa";
 import { IoIosLogOut } from "react-icons/io";
 import { TiShoppingCart, TiHeart } from "react-icons/ti";
 import { CiGift } from "react-icons/ci";
-import Context from "../context";
-import SummaryApi from "../Common";
-import ROLE from "../Common/role";
-import { setUserDetails } from "../store/userSlice";
+import Context from "../../context";
+import SummaryApi from "../../Common";
+import ROLE from "../../Common/role";
+import { setUserDetails } from "../../store/userSlice";
 
 const Header = () => {
   const user = useSelector((state) => state?.user?.user);

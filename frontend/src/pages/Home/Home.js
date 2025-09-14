@@ -1,8 +1,9 @@
 import React from "react";
-import CategoryList from "../components/CategoryList";
-import BannerProduct from "../components/BannerProduct";
-import HorizontalCardProduct from "../components/HorizontalCardProduct";
-import VarticalCardProduct from "../components/VarticalCardProduct";
+
+import HorizontalCardProduct from "../../components/LandingPage/HorizontalCardProduct";
+import VarticalCardProduct from "../../components/LandingPage/VarticalCardProduct";
+import BannerProduct from "../../components/LandingPage/BannerProduct";
+import CategoryList from "../../components/LandingPage/CategoryList";
 
 const Home = () => {
   return (

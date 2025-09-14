@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import SummaryApi from "../Common";
+import SummaryApi from "../../Common";
 import { toast } from "react-toastify";
 import moment from "moment";
 import { MdModeEdit } from "react-icons/md";
 import { CiEdit } from "react-icons/ci";
-import ChangeUserRole from "../components/ChangeUserRole";
+import ChangeUserRole from "../../components/ChangeUserRole";
 
 const AllUsers = () => {
   const [allUsers, setAllUsers] = useState([]);

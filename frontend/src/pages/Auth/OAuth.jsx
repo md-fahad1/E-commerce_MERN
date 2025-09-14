@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
 import { GoogleAuthProvider, signInWithPopup, getAuth } from "firebase/auth";
-import { app } from "../firebase"; // Ensure this import is correct
+import { app } from "../../firebase"; // Ensure this import is correct
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import SummaryApi from "../Common";
-import Context from "../context";
-import { setUserDetails } from "../store/userSlice"; // Ensure the correct path
+import SummaryApi from "../../Common";
+import Context from "../../context";
+import { setUserDetails } from "../../store/userSlice"; // Ensure the correct path
 
 const OAuth = () => {
   const auth = getAuth(app);
