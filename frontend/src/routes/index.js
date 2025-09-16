@@ -24,6 +24,7 @@ import UserWishList from "../pages/UserDashbaord/UserWishList";
 import UserProfile from "../pages/UserDashbaord/UserProfile";
 import AdminProfile from "../pages/AdminDashboard/AdminProfile";
 import Home from "../pages/Home/Home";
+import AllOrder from "../pages/AdminDashboard/AllOrder";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -104,6 +105,10 @@ const router = createBrowserRouter([
           {
             path: "profile",
             element: <AdminProfile />,
+          },
+          {
+            path: "orders",
+            element: <AllOrder />,
           },
         ],
       },

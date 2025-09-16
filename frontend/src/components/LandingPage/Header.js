@@ -12,6 +12,7 @@ import { setUserDetails } from "../../store/userSlice";
 
 const Header = () => {
   const user = useSelector((state) => state?.user?.user);
+  console.log("header user", user)
   const dispatch = useDispatch();
   const context = useContext(Context);
   const navigate = useNavigate();

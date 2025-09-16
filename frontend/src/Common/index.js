@@ -88,5 +88,17 @@ const SummaryApi = {
     url: `${backendDomain}/api/google`,
     method: "post",
   },
+  placeOrder: {
+    url: `${backendDomain}/api/order/place`,
+    method: "post",
+  },
+  getAllOrders: {
+    url: `${backendDomain}/api/order/all`,
+    method: "get",
+  },
+  getUserOrders: {
+  url: `${backendDomain}/api/order/user`,
+  method: "get",
+},
 };
 export default SummaryApi;

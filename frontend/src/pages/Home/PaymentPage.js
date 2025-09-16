@@ -1,38 +1,46 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import Context from "../../context";
 import SummaryApi from "../../Common";
 import displayINRCurrency from "../../helpers/displayCurrency";
 import { MdDelete } from "react-icons/md";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const PaymentPage = () => {
-  const [name, setName] = useState("");
+  const user = useSelector((state) => state?.user?.user);
+
+  const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [postalCode, setPostalCode] = useState("");
+  const [country, setCountry] = useState("");
   const [note, setNote] = useState("");
   const [cartData, setCartData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [placingOrder, setPlacingOrder] = useState(false);
 
   const navigate = useNavigate();
   const context = useContext(Context);
+
+  console.log("user", user?.currentUser);
 
   // Fetch cart products
   const fetchCartData = async () => {
     setLoading(true);
     try {
-      const response = await fetch(SummaryApi.addToCartProductView.url, {
+      const res = await fetch(SummaryApi.addToCartProductView.url, {
         method: SummaryApi.addToCartProductView.method,
         credentials: "include",
-        headers: {
-          "content-type": "application/json",
-        },
+        headers: { "content-type": "application/json" },
       });
-      const responseData = await response.json();
-      if (responseData.success) {
-        setCartData(responseData.data);
-      }
-    } catch (error) {
-      console.error("Error fetching cart:", error);
+      const data = await res.json();
+      if (data.success) setCartData(data.data);
+    } catch (err) {
+      console.error("Error fetching cart:", err);
+      toast.error("Failed to fetch cart");
     }
     setLoading(false);
   };
@@ -42,60 +50,40 @@ const PaymentPage = () => {
   }, []);
 
   const increaseQty = async (id, qty) => {
-    const response = await fetch(SummaryApi.updateCartProduct.url, {
+    const res = await fetch(SummaryApi.updateCartProduct.url, {
       method: SummaryApi.updateCartProduct.method,
       credentials: "include",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({
-        _id: id,
-        quantity: qty + 1,
-      }),
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ _id: id, quantity: qty + 1 }),
     });
-    const responseData = await response.json();
-    if (responseData.success) {
-      fetchCartData();
-    }
+    const data = await res.json();
+    if (data.success) fetchCartData();
   };
 
   const decreaseQty = async (id, qty) => {
-    if (qty > 1) {
-      const response = await fetch(SummaryApi.updateCartProduct.url, {
-        method: SummaryApi.updateCartProduct.method,
-        credentials: "include",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify({
-          _id: id,
-          quantity: qty - 1,
-        }),
-      });
-      const responseData = await response.json();
-      if (responseData.success) {
-        fetchCartData();
-      }
-    }
+    if (qty <= 1) return;
+    const res = await fetch(SummaryApi.updateCartProduct.url, {
+      method: SummaryApi.updateCartProduct.method,
+      credentials: "include",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ _id: id, quantity: qty - 1 }),
+    });
+    const data = await res.json();
+    if (data.success) fetchCartData();
   };
 
   const deleteCartProduct = async (id) => {
-    const response = await fetch(SummaryApi.deleteCartProduct.url, {
+    const res = await fetch(SummaryApi.deleteCartProduct.url, {
       method: SummaryApi.deleteCartProduct.method,
       credentials: "include",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({
-        _id: id,
-      }),
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ _id: id }),
     });
-
-    const responseData = await response.json();
-
-    if (responseData.success) {
+    const data = await res.json();
+    if (data.success) {
       fetchCartData();
       context.fetchUserAddToCart();
+      toast.success("Product removed from cart");
     }
   };
 
@@ -108,31 +96,60 @@ const PaymentPage = () => {
   const handleOrderConfirm = async (e) => {
     e.preventDefault();
 
-    if (!name || !phone || !address) {
-      alert("Please fill in all required fields.");
+    // Validation
+    if (!fullName || !phone || !address || !city || !postalCode || !country) {
+      toast.error("Please fill in all required fields");
       return;
     }
 
+    if (cartData.length === 0) {
+      toast.error("Your cart is empty");
+      return;
+    }
+
+    const items = cartData.map((item) => ({
+      productId: item.productId._id,
+      quantity: item.quantity,
+      price: item.productId.sellingPrice,
+    }));
+
     const orderData = {
-      name,
-      phone,
-      address,
+      userId: user._id,
+      shippingAddress: { fullName, phone, address, city, postalCode, country },
       note,
-      cartItems: cartData,
-      total: totalPrice,
+      items,
     };
 
-    console.log("Placing order...", orderData);
+    try {
+      setPlacingOrder(true);
+      const res = await fetch(SummaryApi.placeOrder.url, {
+        method: SummaryApi.placeOrder.method,
+        credentials: "include",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(orderData),
+      });
 
-    // Here you'd call your backend to create the order
-    // await fetch("/api/create-order", { method: "POST", body: JSON.stringify(orderData) })
+      const data = await res.json();
 
-    navigate("/success");
+      if (res.ok) {
+        toast.success(data.message || "Order placed successfully!");
+        context.fetchUserAddToCart();
+        setCartData([]); // Empty the cart
+        navigate("/success");
+      } else {
+        toast.error(data.message || "Failed to place order");
+      }
+    } catch (err) {
+      console.error("Error placing order:", err);
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setPlacingOrder(false);
+    }
   };
 
   return (
     <div className="container mx-auto px-4 py-10 flex flex-col lg:flex-row gap-8">
-      {/* Left - User Info */}
+      {/* Left - Shipping Info */}
       <div className="w-full lg:w-2/3 bg-white shadow-md p-6 rounded-lg">
         <h2 className="text-2xl font-bold mb-6">Shipping Information</h2>
         <form className="space-y-4">
@@ -140,22 +157,18 @@ const PaymentPage = () => {
             <label className="block text-gray-700 font-medium">Full Name</label>
             <input
               type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
               className="w-full p-2 border border-gray-300 rounded mt-1"
-              required
             />
           </div>
           <div>
-            <label className="block text-gray-700 font-medium">
-              Phone Number
-            </label>
+            <label className="block text-gray-700 font-medium">Phone Number</label>
             <input
               type="tel"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               className="w-full p-2 border border-gray-300 rounded mt-1"
-              required
             />
           </div>
           <div>
@@ -164,14 +177,38 @@ const PaymentPage = () => {
               value={address}
               onChange={(e) => setAddress(e.target.value)}
               className="w-full p-2 border border-gray-300 rounded mt-1"
-              rows="3"
-              required
+              rows="2"
             />
           </div>
           <div>
-            <label className="block text-gray-700 font-medium">
-              Note (Optional)
-            </label>
+            <label className="block text-gray-700 font-medium">City</label>
+            <input
+              type="text"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded mt-1"
+            />
+          </div>
+          <div>
+            <label className="block text-gray-700 font-medium">Postal Code</label>
+            <input
+              type="text"
+              value={postalCode}
+              onChange={(e) => setPostalCode(e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded mt-1"
+            />
+          </div>
+          <div>
+            <label className="block text-gray-700 font-medium">Country</label>
+            <input
+              type="text"
+              value={country}
+              onChange={(e) => setCountry(e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded mt-1"
+            />
+          </div>
+          <div>
+            <label className="block text-gray-700 font-medium">Note (Optional)</label>
             <textarea
               value={note}
               onChange={(e) => setNote(e.target.value)}
@@ -190,7 +227,7 @@ const PaymentPage = () => {
           {loading ? (
             <p>Loading...</p>
           ) : (
-            <div>
+            <>
               {cartData.map((product) => (
                 <div
                   key={product._id}
@@ -203,19 +240,14 @@ const PaymentPage = () => {
                       className="w-16 h-16 object-contain rounded"
                     />
                     <div>
-                      <p className="font-medium">
-                        {product?.productId?.productName}
-                      </p>
+                      <p className="font-medium">{product?.productId?.productName}</p>
                       <p className="text-sm text-gray-500">
-                        {displayINRCurrency(product?.productId?.sellingPrice)} ×{" "}
-                        {product.quantity}
+                        {displayINRCurrency(product?.productId?.sellingPrice)} × {product.quantity}
                       </p>
                       <div className="flex items-center gap-2 mt-1">
                         <button
                           type="button"
-                          onClick={() =>
-                            decreaseQty(product._id, product.quantity)
-                          }
+                          onClick={() => decreaseQty(product._id, product.quantity)}
                           className="border px-2 rounded"
                         >
                           -
@@ -223,9 +255,7 @@ const PaymentPage = () => {
                         <span>{product.quantity}</span>
                         <button
                           type="button"
-                          onClick={() =>
-                            increaseQty(product._id, product.quantity)
-                          }
+                          onClick={() => increaseQty(product._id, product.quantity)}
                           className="border px-2 rounded"
                         >
                           +
@@ -235,9 +265,7 @@ const PaymentPage = () => {
                   </div>
                   <div className="flex flex-col items-end">
                     <p className="font-semibold">
-                      {displayINRCurrency(
-                        product?.productId?.sellingPrice * product.quantity
-                      )}
+                      {displayINRCurrency(product?.productId?.sellingPrice * product.quantity)}
                     </p>
                     <button
                       type="button"
@@ -257,11 +285,12 @@ const PaymentPage = () => {
 
               <button
                 onClick={handleOrderConfirm}
-                className="bg-[#192A56] hover:bg-green-700 text-white w-full mt-5 py-3 rounded-lg font-semibold"
+                disabled={placingOrder}
+                className="bg-[#192A56] hover:bg-green-700 text-white w-full mt-5 py-3 rounded-lg font-semibold disabled:opacity-50"
               >
-                Confirm Order
+                {placingOrder ? "Placing Order..." : "Confirm Order"}
               </button>
-            </div>
+            </>
           )}
         </div>
       </div>
