@@ -100,5 +100,9 @@ const SummaryApi = {
   url: `${backendDomain}/api/order/user`,
   method: "get",
 },
+updateOrderStatus: {
+    url: `${backendDomain}/api/order/update-status/:id`, // ✅ FIX: added :id
+    method: "PUT",
+  },
 };
 export default SummaryApi;
